@@ -23,5 +23,4 @@ RUN curl -o /usr/local/bin/composer https://getcomposer.org/composer-2.phar \
     && chmod +x /usr/local/bin/composer
 
 # Clean up image
-RUN rm -rf /tmp/*
-
+RUN rm -rf /tmp/* /var/cache
