@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+export PHP_IDE_CONFIG="serverName=docker"
+
+php \
+  -dxdebug.mode=debug,develop \
+  -dxdebug.start_with_request=1 \
+  -dxdebug.client_host=host.docker.internal \
+  "$@"

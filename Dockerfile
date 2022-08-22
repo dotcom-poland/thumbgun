@@ -19,8 +19,16 @@ RUN apk add --no-cache bash && \
 	apk add symfony-cli && \
 	apk del bash
 
-# Clean up image
-RUN rm -rf /tmp/* /var/cache
-
 # Composer
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
+
+# XDebug
+RUN apk add --no-cache $PHPIZE_DEPS && \
+    pecl install xdebug-3.1.5 && \
+    apk del --no-cache ${PHPIZE_DEPS}
+
+COPY ./artifacts/xdebug /usr/local/bin/xdebug
+RUN chmod +x /usr/local/bin/xdebug
+
+# Clean up image
+RUN rm -rf /tmp/* /var/cache
