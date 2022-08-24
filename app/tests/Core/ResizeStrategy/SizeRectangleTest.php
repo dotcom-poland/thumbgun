@@ -38,5 +38,7 @@ final class SizeRectangleTest extends TestCase
         yield 'non number height' => ['300xa'];
         yield 'malformed width' => ['1.1x300'];
         yield 'malformed height' => ['300x1.1'];
+        yield 'width starts with zero' => ['020x300'];
+        yield 'height starts with zero' => ['200x030'];
     }
 }
