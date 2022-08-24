@@ -34,6 +34,10 @@ final class SizeRectangle implements SizeInterface
             throw new SizeException();
         }
 
+        if (\str_starts_with($parts[0], '0') || \str_starts_with($parts[1], '0')) {
+            throw new SizeException();
+        }
+
         $width = (int) $parts[0];
         $height = (int) $parts[1];
 
