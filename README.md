@@ -1,7 +1,8 @@
 thumbgun Symfony application
 ============================
 
-[https://medium.com/@dotcom.software](https://medium.com/@dotcom.software)
+* ["Serving resized S3 images on the fly" on Medium](https://medium.com/@dotcom.software/serving-resized-s3-images-on-the-fly-2ed98e10bf3a)
+* [Support my work](https://medium.com/@dotcom.software)
 
 ## Running
 
