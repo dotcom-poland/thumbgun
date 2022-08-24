@@ -1,4 +1,4 @@
-name: Build and test
+name: Tests
 
 on:
     push:
@@ -37,10 +37,10 @@ jobs:
                 run: bin/phpunit
 
             -   name: Move Psalm
-                run: mv vendor/bin/psalm.phar psalm.phar
+                run: cp -f vendor/bin/psalm.phar /bin/psalm.phar
 
             -   name: Uninstall dev dependencies
                 run: composer install -o -n --no-dev
 
             -   name: Static analysis
-                run: psalm.phar
+                run: /bin/psalm.phar
