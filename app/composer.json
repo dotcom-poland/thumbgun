@@ -1,4 +1,6 @@
 {
+    "name": "dotcom-poland/thumbgun",
+    "description": "Serving resized S3 images on the fly",
     "type": "project",
     "license": "MIT",
     "minimum-stability": "stable",
