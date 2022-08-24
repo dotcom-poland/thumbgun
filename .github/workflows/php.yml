@@ -37,10 +37,10 @@ jobs:
                 run: bin/phpunit
 
             -   name: Move Psalm
-                run: cp -f vendor/bin/psalm.phar /bin/psalm.phar
+                run: cp -f vendor/bin/psalm.phar /tmp/psalm.phar
 
             -   name: Uninstall dev dependencies
                 run: composer install -o -n --no-dev
 
             -   name: Static analysis
-                run: /bin/psalm.phar
+                run: /tmp/psalm.phar
