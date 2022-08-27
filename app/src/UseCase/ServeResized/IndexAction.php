@@ -36,9 +36,6 @@ final class IndexAction
      */
     public function __invoke(Request $request): Response
     {
-        /** @var non-empty-string $checksum */
-        $checksum = $request->attributes->get('checksum');
-
         /** @var non-empty-string $strategyName */
         $strategyName = $request->attributes->get('strategy');
 

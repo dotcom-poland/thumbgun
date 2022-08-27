@@ -4,9 +4,9 @@ Thumbgun Symfony application
 * ["Serving resized S3 images on the fly" on Medium](https://medium.com/@dotcom.software/serving-resized-s3-images-on-the-fly-2ed98e10bf3a)
 * [Support my work](https://medium.com/@dotcom.software)
 
-A Symfony application that in respond to a specific GET request:
+A Symfony application that in response to a specific GET request:
 
-1. retrieves image from the configured data storage,
+1. retrieves the image from the configured data storage,
 2. resizes the image on the fly,
 3. outputs the image in the requested output format.
 
