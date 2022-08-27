@@ -11,7 +11,6 @@ use App\Core\ResizeStrategy\Exception\ResizeStrategyException;
 use App\Core\ResizeStrategy\Exception\SizeException;
 use App\Core\ResizeStrategy\ResizeStrategyFactoryInterface;
 use App\Core\ResizeStrategy\SizeFactoryInterface;
-use App\Core\Security\ChecksumValidatorInterface;
 use App\Core\Source\Exception\ImageNotFoundException;
 use App\Core\Source\ImageSourceFactoryInterface;
 use Exception;
@@ -24,7 +23,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 final class IndexAction
 {
     public function __construct(
-        private readonly ChecksumValidatorInterface     $checksumValidator,
         private readonly SupportedImagesInterface       $supportedFormats,
         private readonly SizeFactoryInterface           $sizeFactory,
         private readonly ResizeStrategyFactoryInterface $resizeStrategyFactory,
@@ -52,10 +50,6 @@ final class IndexAction
 
         /** @var non-empty-string $imageId */
         $imageId = $request->attributes->get('id');
-
-        if (false === ($this->checksumValidator)($strategyName, $sizeFormat, $imageId, $checksum)) {
-            return new Response('Invalid checksum', Response::HTTP_FORBIDDEN);
-        }
 
         if (false === $this->supportedFormats->isSupported($imageFormat)) {
             return new Response('Unsupported format', Response::HTTP_BAD_REQUEST);

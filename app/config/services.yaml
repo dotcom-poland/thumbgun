@@ -15,9 +15,6 @@ services:
         resource: '../src/UseCase/*/*Action.php'
         tags: [ { name: 'controller.service_arguments' } ]
 
-    App\Core\Security\StringVault:
-        arguments: [ '%env(APP_SECRET_KEYS)%' ]
-
     App\Core\Filesystem\FilesystemFileFactory:
         arguments: [ '%env(APP_FILESYSTEM_PATH)%' ]
 
@@ -25,11 +22,3 @@ services:
         arguments: [ {
             'fixed': '@App\Core\ResizeStrategy\ResizeStrategyFixed',
         } ]
-
-when@dev:
-    services:
-        App\Core\Security\ChecksumValidatorInterface: '@App\Core\Security\DisabledValidator'
-
-when@prod:
-    services:
-        App\Core\Security\ChecksumValidatorInterface: '@App\Core\Security\HmacChecksumValidator'

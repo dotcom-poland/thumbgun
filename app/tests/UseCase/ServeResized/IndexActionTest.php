@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Test\App\Core\ResizeStrategy\DummyResizeStrategy;
-use Test\App\Core\Security\TestChecksumValidator;
 use Test\App\Core\Source\TestImageSource;
 
 final class IndexActionTest extends TestCase
@@ -38,15 +37,6 @@ final class IndexActionTest extends TestCase
         $response = $this->dispatch();
 
         self::assertInstanceOf(BinaryFileResponse::class, $response);
-    }
-
-    public function testHandlesInvalidChecksum(): void
-    {
-        $response = $this->dispatch([
-            'checksum' => 'invalid',
-        ]);
-
-        self::assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
     }
 
     public function testHandlesUnsupportedFormat(): void
@@ -118,7 +108,6 @@ final class IndexActionTest extends TestCase
     private function dispatch(array $attributes = []): Response
     {
         $action = new IndexAction(
-            new TestChecksumValidator(),
             new ImmutableSupportedImages(['webp']),
             new DefaultSizeFactory(),
             new ImmutableResizeStrategyFactory(['dummy' => $this->resizeStrategy]),
@@ -134,16 +123,7 @@ final class IndexActionTest extends TestCase
             'id' => 'a/b/c/123.jpeg',
         ], $attributes);
 
-        $checksum = \vsprintf('%s:%s:%s', [
-            $attributes['strategy'],
-            $attributes['size'],
-            $attributes['id'],
-        ]);
-
-        $request = new Request([], [], \array_merge(
-            ['checksum' => $checksum],
-            $attributes,
-        ));
+        $request = new Request([], [], $attributes);
 
         return $action($request);
     }
