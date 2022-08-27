@@ -8,14 +8,14 @@ namespace App\Core\Security;
 final class HmacChecksumValidator implements ChecksumValidatorInterface
 {
     public function __construct(
-        private readonly Sha1ChecksumBuilder $hashBuilder,
+        private readonly ChecksumBuilderInterface $hashBuilder,
         private readonly VaultInterface $vault,
     ) {}
 
-    public function __invoke(string $strategy, string $size, string $group, string $imageId, string $checksum): bool
+    public function __invoke(string $strategy, string $size, string $imageId, string $checksum): bool
     {
         foreach ($this->vault as $key) {
-            $hash = ($this->hashBuilder)($strategy, $size, $group, $imageId, $key);
+            $hash = ($this->hashBuilder)($strategy, $size, $imageId, $key);
 
             if (\hash_equals($hash, $checksum)) {
                 return true;

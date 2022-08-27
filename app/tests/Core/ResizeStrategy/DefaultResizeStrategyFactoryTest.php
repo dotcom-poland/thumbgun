@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Test\App\Core\ResizeStrategy;
 
-use App\Core\ResizeStrategy\DefaultResizeStrategyFactory;
-use App\Core\ResizeStrategy\Exception\ResizeStrategyMissingException;
+use App\Core\ResizeStrategy\ImmutableResizeStrategyFactory;
+use App\Core\ResizeStrategy\Exception\ResizeStrategyException;
 use App\Core\ResizeStrategy\ResizeStrategyFixed;
 use PHPUnit\Framework\TestCase;
-use Test\App\Core\Filesystem\TestFilesystem;
+use Test\App\Core\Filesystem\TestFileFactory;
 
 final class DefaultResizeStrategyFactoryTest extends TestCase
 {
-    private readonly DefaultResizeStrategyFactory $factory;
+    private readonly ImmutableResizeStrategyFactory $factory;
 
     protected function setUp(): void
     {
-        $this->factory = new DefaultResizeStrategyFactory(
-            new ResizeStrategyFixed(new TestFilesystem()),
-        );
+        $this->factory = new ImmutableResizeStrategyFactory([
+            'fixed' => new ResizeStrategyFixed(new TestFileFactory()),
+        ]);
     }
 
     public function testReturnsResizeStrategy(): void
@@ -30,7 +30,7 @@ final class DefaultResizeStrategyFactoryTest extends TestCase
 
     public function testThrowsExceptionOnUnsupportedStrategy(): void
     {
-        $this->expectException(ResizeStrategyMissingException::class);
+        $this->expectException(ResizeStrategyException::class);
 
         ($this->factory)('invalid');
     }

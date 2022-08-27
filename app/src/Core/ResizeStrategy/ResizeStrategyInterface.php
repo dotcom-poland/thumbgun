@@ -12,5 +12,5 @@ interface ResizeStrategyInterface
     /**
      * @throws ResizeException
      */
-    public function __invoke(ImageInterface $image, SizeInterface $size): \SplFileInfo;
+    public function __invoke(ImageInterface $image, SizeInterface $size): \SplFileObject;
 }

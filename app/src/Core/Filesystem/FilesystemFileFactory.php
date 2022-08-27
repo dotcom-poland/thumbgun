@@ -6,16 +6,14 @@ namespace App\Core\Filesystem;
 
 use App\Core\Filesystem\Exception\FilesystemException;
 
-final class TemporaryFilesystem implements FilesystemInterface
+final class FilesystemFileFactory implements FileFactory
 {
     public function __construct(
         private readonly string $directory,
-    )
-    {
-    }
+    ) {}
 
     /** {@inheritDoc} */
-    public function createFile(string $filename): \SplFileObject
+    public function __invoke(string $filename, string $data): \SplFileObject
     {
         $pathname = \sprintf('%s/%s', $this->directory, $filename);
         $dirname = \dirname($pathname);
@@ -27,11 +25,15 @@ final class TemporaryFilesystem implements FilesystemInterface
         }
 
         try {
-            if (false === \file_exists($pathname)) {
-                \touch($pathname);
-            }
+            \touch($pathname);
 
-            return new \SplFileObject($pathname, 'w+');
+            $file = new \SplFileObject($pathname, 'w+');
+            $file->fwrite($data);
+            $file->fseek(0);
+
+            \clearstatcache(filename: $pathname);
+
+            return $file;
         } catch (\Exception $exception) {
             throw new FilesystemException($exception->getMessage(), (int) $exception->getCode(), $exception);
         }

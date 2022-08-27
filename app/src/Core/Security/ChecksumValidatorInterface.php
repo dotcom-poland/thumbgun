@@ -7,5 +7,5 @@ namespace App\Core\Security;
  */
 interface ChecksumValidatorInterface
 {
-    public function __invoke(string $strategy, string $size, string $group, string $imageId, string $checksum): bool;
+    public function __invoke(string $strategy, string $size, string $imageId, string $checksum): bool;
 }

@@ -5,14 +5,16 @@ namespace App\Core\Source;
 use App\Core\Image\Exception\ImageException;
 use App\Core\Image\ImageInterface;
 use App\Core\Source\Exception\ImageNotFoundException;
-use App\Core\Source\Exception\SourceException;
+use App\Core\Source\Exception\ImageSourceException;
+use Exception;
 
-interface SourceInterface
+interface ImageSourceInterface
 {
     /**
      * @throws ImageException
      * @throws ImageNotFoundException
-     * @throws SourceException
+     * @throws ImageSourceException
+     * @throws Exception
      */
-    public function __invoke(string $imageGroup, string $imageId, string $imageFormat): ImageInterface;
+    public function __invoke(string $imageId, string $imageFormat): ImageInterface;
 }

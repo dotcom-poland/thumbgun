@@ -8,8 +8,10 @@ use App\Core\Image\Exception\ImageException;
 
 final class ImmutableImage implements ImageInterface
 {
-    /** @var non-empty-string */
-    private readonly string $imageGroup;
+    public const IMAGE_ID_PROHIBITED_SYMBOLS = [
+        '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
+        '+', '=', '[', ']', '{', '}', ':', ';', '<', '>', '?', '/', '\\',
+    ];
 
     /** @var non-empty-string */
     private readonly string $imageId;
@@ -17,36 +19,29 @@ final class ImmutableImage implements ImageInterface
     /** @var non-empty-string */
     private readonly string $requestedFormat;
 
-    private readonly \SplFileInfo $source;
+    private readonly \SplFileObject $source;
 
     /** @throws ImageException */
-    public function __construct(string $imageGroup, string $imageId, string $requestedFormat, \SplFileInfo $source)
+    public function __construct(string $imageId, string $requestedFormat, \SplFileObject $source)
     {
-        if (empty($imageGroup)) {
-            throw new ImageException('Group empty');
-        }
-
-        if (empty($imageId)) {
+        if (empty($imageId) || self::containsDangerousSymbols($imageId)) {
             throw new ImageException('Image id empty');
-        }
-        if (!preg_match('/^[a-zA-Z0-9\-_.]+$/', $imageId)) {
-            throw new ImageException('Image id invalid');
         }
 
         if (empty($requestedFormat)) {
             throw new ImageException('Requested format empty');
         }
 
-        $this->imageGroup = $imageGroup;
         $this->imageId = $imageId;
         $this->requestedFormat = $requestedFormat;
         $this->source = $source;
     }
 
-    /** {@inheritDoc} */
-    public function getImageGroup(): string
+    private static function containsDangerousSymbols(string $imageId): bool
     {
-        return $this->imageGroup;
+        $symbolsDetected = \array_intersect(self::IMAGE_ID_PROHIBITED_SYMBOLS, \str_split($imageId));
+
+        return \count($symbolsDetected) > 0;
     }
 
     /** {@inheritDoc} */
@@ -61,7 +56,7 @@ final class ImmutableImage implements ImageInterface
         return $this->requestedFormat;
     }
 
-    public function getSource(): \SplFileInfo
+    public function getSource(): \SplFileObject
     {
         return $this->source;
     }

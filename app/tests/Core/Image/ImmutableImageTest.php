@@ -10,45 +10,32 @@ use PHPUnit\Framework\TestCase;
 
 final class ImmutableImageTest extends TestCase
 {
-    public function testItDoesNotAllowEmptyGroup(): void
-    {
-        $this->expectException(ImageException::class);
-
-        new ImmutableImage('', '123', 'jpeg', new \SplTempFileObject());
-    }
-
     public function testItDoesNotAllowEmptyId(): void
     {
         $this->expectException(ImageException::class);
 
-        new ImmutableImage('group', '', 'jpeg', new \SplTempFileObject());
-    }
-
-    /** @dataProvider invalidImageIdProvider */
-    public function testItOnlyAllowsCertainCharacterSetsAsTheImageIdToPreventHacking(string $imageId): void
-    {
-        $this->expectException(ImageException::class);
-
-        new ImmutableImage('group', $imageId, 'jpeg', new \SplTempFileObject());
-    }
-
-    public function invalidImageIdProvider(): iterable
-    {
-        $prohibitedSymbols = [
-            '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '*', '(', ')',
-            '+', '=', '[', ']', '{', '}', ':', ';', '<', '>', ',', '?', '/', '\\',
-            '|',
-        ];
-
-        foreach ($prohibitedSymbols as $symbol) {
-            yield ["123{$symbol}ABCdef.jpg"];
-        }
+        new ImmutableImage('', 'jpeg', new \SplTempFileObject());
     }
 
     public function testItDoesNotAllowEmptyRequestFormat(): void
     {
         $this->expectException(ImageException::class);
 
-        new ImmutableImage('group', '123', '', new \SplTempFileObject());
+        new ImmutableImage('123', '', new \SplTempFileObject());
+    }
+
+    /** @dataProvider invalidImageIdProvider */
+    public function testProhibitedSymbolsInIdAreNotAllowed(string $imageId): void
+    {
+        $this->expectException(ImageException::class);
+
+        new ImmutableImage($imageId, 'jpeg', new \SplTempFileObject());
+    }
+
+    public function invalidImageIdProvider(): iterable
+    {
+        foreach (ImmutableImage::IMAGE_ID_PROHIBITED_SYMBOLS as $prohibitedSymbol) {
+            yield ["123{$prohibitedSymbol}ABCdef.jpg"];
+        }
     }
 }

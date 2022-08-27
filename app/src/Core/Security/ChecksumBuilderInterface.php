@@ -7,5 +7,5 @@ namespace App\Core\Security;
 /** @psalm-pure */
 interface ChecksumBuilderInterface
 {
-    public function __invoke(string $strategy, string $size, string $group, string $imageId, string $key): string;
+    public function __invoke(string $strategy, string $size, string $imageId, string $key): string;
 }

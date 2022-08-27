@@ -3,7 +3,7 @@ services:
         autowire: true
         autoconfigure: true
         bind:
-            array $supportedFormats: [ 'jpg', 'webp' ]
+            array $supportedFormats: [ 'jpeg', 'webp' ]
 
     App\:
         resource: '../src/'
@@ -18,5 +18,18 @@ services:
     App\Core\Security\StringVault:
         arguments: [ '%env(APP_SECRET_KEYS)%' ]
 
-    App\Core\Filesystem\TemporaryFilesystem:
+    App\Core\Filesystem\FilesystemFileFactory:
         arguments: [ '%env(APP_FILESYSTEM_PATH)%' ]
+
+    App\Core\ResizeStrategy\ImmutableResizeStrategyFactory:
+        arguments: [ {
+            'fixed': '@App\Core\ResizeStrategy\ResizeStrategyFixed',
+        } ]
+
+when@dev:
+    services:
+        App\Core\Security\ChecksumValidatorInterface: '@App\Core\Security\DisabledValidator'
+
+when@prod:
+    services:
+        App\Core\Security\ChecksumValidatorInterface: '@App\Core\Security\HmacChecksumValidator'

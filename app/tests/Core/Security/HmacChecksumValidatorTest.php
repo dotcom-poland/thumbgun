@@ -23,12 +23,11 @@ final class HmacChecksumValidatorTest extends TestCase
 
     public function testItSupportsManyKeys(): void
     {
-        $expectedChecksumForKey2 = 'o1rbq2f5ssk';
+        $expectedChecksumForKey2 = 'nhuoc3shp58';
 
         self::assertTrue(($this->checksumValidator)(
             'fixed',
             '50x50',
-            'random',
             '2030004030',
             $expectedChecksumForKey2,
         ));

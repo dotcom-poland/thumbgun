@@ -9,9 +9,9 @@ final class Sha1ChecksumBuilder implements ChecksumBuilderInterface
 {
     private const ALGO = 'sha1';
 
-    public function __invoke(string $strategy, string $size, string $group, string $imageId, string $key): string
+    public function __invoke(string $strategy, string $size, string $imageId, string $key): string
     {
-        $string = \sprintf('%s:%s:%s:%s', $strategy, $size, $group, $imageId);
+        $string = \sprintf('%s:%s:%s', $strategy, $size, $imageId);
 
         /** @psalm-suppress ImpureFunctionCall */
         if (false === \in_array(self::ALGO, \hash_hmac_algos(), true)) {

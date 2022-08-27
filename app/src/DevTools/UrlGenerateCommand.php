@@ -34,18 +34,16 @@ final class UrlGenerateCommand extends Command
     protected function configure(): void
     {
         $this->setName('dev:url-generate')
-            ->addArgument('group', InputArgument::REQUIRED)
+            ->setDescription('Generates image link with a valid checksum')
             ->addArgument('strategy', InputArgument::REQUIRED)
             ->addArgument('size', InputArgument::REQUIRED)
             ->addArgument('image-id', InputArgument::REQUIRED)
-            ->addArgument('format', InputArgument::REQUIRED);
+            ->addArgument('output-format', InputArgument::REQUIRED)
+            ->addUsage('fixed 100x100 1/2/3.jpg webp');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var non-empty-string $group */
-        $group = $input->getArgument('group');
-
         /** @var non-empty-string $strategy */
         $strategy = $input->getArgument('strategy');
 
@@ -56,7 +54,7 @@ final class UrlGenerateCommand extends Command
         $imageId = $input->getArgument('image-id');
 
         /** @var non-empty-string $format */
-        $format = $input->getArgument('format');
+        $format = $input->getArgument('output-format');
 
         try {
             $key = $this->resolveKey($input, $output);
@@ -69,7 +67,6 @@ final class UrlGenerateCommand extends Command
         $checksum = ($this->checksumBuilder)(
             $strategy,
             $size,
-            $group,
             $imageId,
             $key,
         );
@@ -78,7 +75,6 @@ final class UrlGenerateCommand extends Command
             'checksum' => $checksum,
             'strategy' => $strategy,
             'size' => $size,
-            'group' => $group,
             'id' => $imageId,
             'format' => $format,
         ]);

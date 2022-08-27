@@ -4,8 +4,8 @@ namespace App\Core\Filesystem;
 
 use App\Core\Filesystem\Exception\FilesystemException;
 
-interface FilesystemInterface
+interface FileFactory
 {
     /** @throws FilesystemException */
-    public function createFile(string $filename): \SplFileObject;
+    public function __invoke(string $filename, string $data): \SplFileObject;
 }
