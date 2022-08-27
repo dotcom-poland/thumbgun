@@ -1,3 +1,6 @@
-controllers:
-    resource: ../src/Controller/
-    type: attribute
+thumbnail_serve:
+    controller: App\UseCase\ServeResized\IndexAction
+    path: /t/{strategy}/{size}/{format}/{id}
+    methods: [ 'GET' ]
+    requirements:
+        id: '.+'
