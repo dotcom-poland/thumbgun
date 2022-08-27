@@ -9,8 +9,8 @@ use App\Core\Image\Exception\ImageException;
 final class ImmutableImage implements ImageInterface
 {
     public const IMAGE_ID_PROHIBITED_SYMBOLS = [
-        '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
-        '+', '=', '[', ']', '{', '}', ':', ';', '<', '>', '?', '/', '\\',
+        '~', '`', '!', '@', '#', '$', '%', '^', '*', '(', ')',
+        '[', ']', '{', '}', ':', ';', '<', '>', '?', '\\',
     ];
 
     /** @var non-empty-string */

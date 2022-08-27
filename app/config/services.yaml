@@ -3,7 +3,7 @@ services:
         autowire: true
         autoconfigure: true
         bind:
-            array $supportedFormats: [ 'jpeg', 'webp' ]
+            array $supportedOutputFormats: [ 'jpeg', 'webp' ]
 
     App\:
         resource: '../src/'
@@ -11,8 +11,8 @@ services:
             - '../src/Kernel.php'
 
     App\Controllers\:
-        namespace: 'App\'
-        resource: '../src/**/*Action.php'
+        namespace: 'App\UseCase\'
+        resource: '../src/UseCase/*/*Action.php'
         tags: [ { name: 'controller.service_arguments' } ]
 
     App\Core\Security\StringVault:

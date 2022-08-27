@@ -131,7 +131,7 @@ final class IndexActionTest extends TestCase
             'strategy' => 'dummy',
             'size' => '50x50',
             'format' => 'webp',
-            'id' => '123.jpeg',
+            'id' => 'a/b/c/123.jpeg',
         ], $attributes);
 
         $checksum = \vsprintf('%s:%s:%s', [

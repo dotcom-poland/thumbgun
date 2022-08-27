@@ -7,14 +7,14 @@ namespace App\Core\Image;
 final class ImmutableSupportedImages implements SupportedImagesInterface
 {
     /**
-     * @param string[] $supportedFormats
+     * @param string[] $supportedOutputFormats
      */
     public function __construct(
-        private readonly array $supportedFormats
+        private readonly array $supportedOutputFormats
     ) {}
 
     public function isSupported(string $requestedFormat): bool
     {
-        return \in_array($requestedFormat, $this->supportedFormats, true);
+        return \in_array($requestedFormat, $this->supportedOutputFormats, true);
     }
 }
