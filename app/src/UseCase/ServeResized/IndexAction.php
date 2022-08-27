@@ -87,14 +87,10 @@ final class IndexAction
         } catch (ImageException) {
             return new Response('Image request error', Response::HTTP_BAD_REQUEST);
         } catch (SourceException $exception) {
-            $this->logger->error('Failed serving the thumbnail from the source', [
-                'strategy' => $strategy,
-                'size' => $sizeFormat,
-                'group' => $imageGroup,
-                'imageId' => $imageId,
-                'format' => $imageFormat,
-                'exception' => $exception,
-            ]);
+            $this->logger->error('Failed serving the thumbnail from the source', \array_merge([
+                $request->attributes->all(),
+                ['exception' => $exception],
+            ]));
 
             return new Response('Failed serving the request from the provider', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -104,14 +100,10 @@ final class IndexAction
         } catch (SizeException) {
             return new Response('Invalid size', Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
-            $this->logger->error('Failed serving the thumbnail', [
-                'strategy' => $strategy,
-                'size' => $sizeFormat,
-                'group' => $imageGroup,
-                'imageId' => $imageId,
-                'format' => $imageFormat,
-                'exception' => $exception,
-            ]);
+            $this->logger->error('Failed serving the thumbnail', \array_merge([
+                $request->attributes->all(),
+                ['exception' => $exception],
+            ]));
 
             return new Response('Failed serving the request', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
