@@ -12,8 +12,14 @@ A Symfony application that in response to a specific GET request:
 
 ## Running
 
-1. Copy `.env.dist` to `.env` and modify which `docker-compose.yml` files to use
-2. Run `docker-compose up -d`
+1. Add `thumbgun.local` to the `hosts` of your system
+2. Copy `.env.dist` to `.env` and modify which `docker-compose.yml` files to use
+3. Run `docker-compose up -d`
+4. Install vendors `docker-compose exec php composer install`
+
+## Stopping
+
+`docker-compose down`
 
 ### Are you working in Linux? Fix permission issues
 
