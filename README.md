@@ -15,6 +15,12 @@ A Symfony application that in response to a specific GET request:
 1. Copy `.env.dist` to `.env` and modify which `docker-compose.yml` files to use
 2. Run `docker-compose up -d`
 
+### Are you working in Linux? Fix permission issues
+
+1. Copy `docker-compose.custom.yml.dist` to `docker-compose.custom.yml`
+2. Change `USER_UID` and `USER_GID` to your user's id and group id
+3. Include this custom docker-compose file in the `COMPOSE_FILE` of the `.env` file 
+
 ## Xdebug
 
 To enable:

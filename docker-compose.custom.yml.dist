@@ -1,0 +1,10 @@
+# To use this file make sure this file is included in the .env file in the COMPOSE_FILE env
+
+services:
+  php:
+    build:
+      args:
+          # write your $UID here, check it in your local bash with "echo $UID"
+          # this is a fix for permission issues in Linux Docker containers running with a user with different uid/gid
+          - USER_UID=1000
+          - USER_GID=1000
