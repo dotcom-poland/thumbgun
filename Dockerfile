@@ -1,17 +1,16 @@
 FROM composer:2 as composer
 FROM php:8.1-fpm-alpine as base
 
-# Git
-RUN apk add --update --no-cache git curl
+# Necessary tools
+RUN apk add --update --no-cache ${PHPIZE_DEPS} git curl
 
 # ZIP module
 RUN apk add --no-cache libzip-dev && docker-php-ext-configure zip && docker-php-ext-install zip
 
 # Imagick module
-RUN apk add --no-cache ${PHPIZE_DEPS} libgomp imagemagick imagemagick-dev && \
+RUN apk add --no-cache libgomp imagemagick imagemagick-dev && \
 	pecl install -o -f imagick && \
-	docker-php-ext-enable imagick && \
-	apk del --no-cache ${PHPIZE_DEPS}
+	docker-php-ext-enable imagick
 
 # Symfony CLI tool
 RUN apk add --no-cache bash && \
@@ -19,14 +18,16 @@ RUN apk add --no-cache bash && \
 	apk add symfony-cli && \
 	apk del bash
 
+# XDebug from PECL
+RUN pecl install xdebug-3.1.5
+
+# Necessary build deps not longer needed
+RUN apk del --no-cache ${PHPIZE_DEPS}
+
 # Composer
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
 
-# XDebug
-RUN apk add --no-cache $PHPIZE_DEPS && \
-    pecl install xdebug-3.1.5 && \
-    apk del --no-cache ${PHPIZE_DEPS}
-
+# XDebug wrapper
 COPY ./artifacts/xdebug /usr/local/bin/xdebug
 RUN chmod +x /usr/local/bin/xdebug
 
