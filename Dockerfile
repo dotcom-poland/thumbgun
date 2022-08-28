@@ -5,9 +5,9 @@ ARG USER_UID=82
 ARG USER_GID=82
 
 # Recreate www-data user with user id matching the host
-RUN deluser www-data && \
+RUN deluser --remove-home www-data && \
     addgroup -S -g ${USER_GID} www-data && \
-    adduser -H -u ${USER_UID} -D -S -G www-data www-data
+    adduser -u ${USER_UID} -D -S -G www-data www-data
 
 # Necessary tools
 RUN apk add --update --no-cache ${PHPIZE_DEPS} git curl
