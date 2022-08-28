@@ -2,10 +2,10 @@ FROM composer:2 as composer
 FROM php:8.1-fpm-alpine as base
 
 # Git
-RUN apk add --no-cache git curl
+RUN apk add --update --no-cache git curl
 
 # Necessary build deps
-RUN apk add --update --no-cache ${PHPIZE_DEPS}
+RUN apk add --no-cache ${PHPIZE_DEPS}
 
 # ZIP module
 RUN apk add --no-cache libzip-dev && docker-php-ext-configure zip && docker-php-ext-install zip
