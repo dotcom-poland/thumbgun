@@ -13,3 +13,7 @@
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+
+###> psalm/phar ###
+/psalm.xml
+###< psalm/phar ###
