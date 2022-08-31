@@ -15,6 +15,9 @@ services:
         resource: '../src/UseCase/*/*Action.php'
         tags: [ { name: 'controller.service_arguments' } ]
 
+    App\Core\Security\StringKeyVault:
+        arguments: [ '%env(APP_SECRET_KEYS)%' ]
+
     App\Core\ResizeStrategy\ImmutableResizeStrategyFactory:
         arguments: [ {
             'fixed': '@App\Core\ResizeStrategy\ResizeStrategyFixed',
