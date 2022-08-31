@@ -67,31 +67,44 @@ final class IndexAction
         } catch (ImageException) {
             return new Response('Invalid image requested', Response::HTTP_BAD_REQUEST);
         } catch (Exception $exception) {
-            $this->logger->error('Failed serving the thumbnail from the source', \array_merge([
-                $request->attributes->all(),
-                ['exception' => $exception],
-            ]));
+            $this->logger->error(
+                'Failed serving the thumbnail from the source',
+                \array_merge($request->attributes->all(), ['exception' => $exception])
+            );
 
-            return new Response('Failed serving the request from the store', Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new Response(
+                'Failed serving the request from the store',
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
         try {
             $thumbnail = ($this->thumbnailProcessor)($image, $strategy, $size);
         } catch (Exception $exception) {
-            $this->logger->error('Failed serving the thumbnail', \array_merge([
-                $request->attributes->all(),
-                ['exception' => $exception],
-            ]));
+            $this->logger->error(
+                'Failed serving the thumbnail',
+                \array_merge($request->attributes->all(), ['exception' => $exception])
+            );
 
-            return new Response('Failed serving the request', Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new Response(
+                'Failed serving the request',
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
-        $response = new StreamedResponse();
-        $response->headers->set('Content-Type', \sprintf('image/%s', $image->getRequestedFormat()));
-        $response->headers->set('Content-Disposition', 'inline');
-        $response->setCallback(static function () use ($thumbnail): void {
+        $response = new StreamedResponse(static function () use ($thumbnail): void {
             $thumbnail->fpassthru();
         });
+
+        $response->headers->set(
+            'Content-Type',
+            \sprintf('image/%s', $image->getRequestedFormat())
+        );
+
+        $response->headers->set(
+            'Content-Disposition',
+            'inline'
+        );
 
         return $response;
     }
