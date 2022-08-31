@@ -4,17 +4,12 @@ declare(strict_types=1);
 
 namespace App\Core\Source;
 
-use App\Core\Filesystem\FileFactory;
 use App\Core\Image\ImageInterface;
 use App\Core\Image\ImmutableImage;
 use App\Core\Source\Exception\ImageSourceException;
 
 final class RandomImageSource implements ImageSourceInterface
 {
-    public function __construct (
-        private readonly FileFactory $filesystem,
-    ) {}
-
     /** {@inheritDoc} */
     public function __invoke(string $imageId, string $imageFormat): ImageInterface
     {
@@ -25,8 +20,9 @@ final class RandomImageSource implements ImageSourceInterface
             throw new ImageSourceException('Could not download the image');
         }
 
-        $randomId = \md5(\uniqid((string) \random_int(0, 1000000), true));
-        $file = ($this->filesystem)(\sprintf('%s.random.jpeg', $randomId), $randomImageData);
+        $file = new \SplTempFileObject();
+        $file->fwrite($randomImageData);
+        $file->fseek(0);
 
         return new ImmutableImage($imageId, $imageFormat, $file);
     }

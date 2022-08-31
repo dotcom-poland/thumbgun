@@ -15,10 +15,9 @@ use App\Core\Source\Exception\ImageNotFoundException;
 use App\Core\Source\ImageSourceFactoryInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class IndexAction
 {
@@ -87,9 +86,13 @@ final class IndexAction
             return new Response('Failed serving the request', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new BinaryFileResponse(
-            file: $thumbnail,
-            contentDisposition: ResponseHeaderBag::DISPOSITION_INLINE,
-        );
+        $response = new StreamedResponse();
+        $response->headers->set('Content-Type', \sprintf('image/%s', $image->getRequestedFormat()));
+        $response->headers->set('Content-Disposition', 'inline');
+        $response->setCallback(static function () use ($thumbnail): void {
+            $thumbnail->fpassthru();
+        });
+
+        return $response;
     }
 }
