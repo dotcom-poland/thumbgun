@@ -1,6 +1,6 @@
 thumbnail_serve:
     controller: App\UseCase\ServeResized\IndexAction
-    path: /t/{strategy}/{size}/{format}/{id}
+    path: /t/{checksum}/{strategy}/{size}/{format}/{id}
     methods: [ 'GET' ]
     requirements:
         id: '.+'

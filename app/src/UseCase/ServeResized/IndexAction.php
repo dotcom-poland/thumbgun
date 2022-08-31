@@ -11,6 +11,7 @@ use App\Core\ResizeStrategy\Exception\ResizeStrategyException;
 use App\Core\ResizeStrategy\Exception\SizeException;
 use App\Core\ResizeStrategy\ResizeStrategyFactoryInterface;
 use App\Core\ResizeStrategy\SizeFactoryInterface;
+use App\Core\Security\ChecksumValidatorInterface;
 use App\Core\Source\Exception\ImageNotFoundException;
 use App\Core\Source\ImageSourceFactoryInterface;
 use Exception;
@@ -22,6 +23,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 final class IndexAction
 {
     public function __construct(
+        private readonly ChecksumValidatorInterface     $checksumValidator,
         private readonly SupportedImagesInterface       $supportedFormats,
         private readonly SizeFactoryInterface           $sizeFactory,
         private readonly ResizeStrategyFactoryInterface $resizeStrategyFactory,
@@ -35,6 +37,9 @@ final class IndexAction
      */
     public function __invoke(Request $request): Response
     {
+        /** @var non-empty-string $checksum */
+        $checksum = $request->attributes->get('checksum');
+
         /** @var non-empty-string $strategyName */
         $strategyName = $request->attributes->get('strategy');
 
@@ -46,6 +51,10 @@ final class IndexAction
 
         /** @var non-empty-string $imageId */
         $imageId = $request->attributes->get('id');
+
+        if (false === ($this->checksumValidator)($strategyName, $sizeFormat, $imageId, $imageFormat, $checksum)) {
+            return new Response('Invalid checksum', Response::HTTP_FORBIDDEN);
+        }
 
         if (false === $this->supportedFormats->isSupported($imageFormat)) {
             return new Response('Unsupported format', Response::HTTP_BAD_REQUEST);

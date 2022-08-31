@@ -48,4 +48,4 @@ CLI tool is available to generate image link, eg:
 
 will output:
 
-`/t/fixed/100x100/webp/some/file/id.jpg`
+`/t/r87mc0861cc/fixed/100x100/webp/some/file/id.jpg`
