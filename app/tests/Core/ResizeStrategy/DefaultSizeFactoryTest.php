@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Test\App\Core\Image;
+namespace Test\App\Core\ResizeStrategy;
 
-use App\Core\Image\DefaultSizeFactory;
+use App\Core\ResizeStrategy\DefaultSizeFactory;
 use App\Core\ResizeStrategy\Exception\SizeException;
 use App\Core\ResizeStrategy\SizeRectangle;
 use PHPUnit\Framework\TestCase;
