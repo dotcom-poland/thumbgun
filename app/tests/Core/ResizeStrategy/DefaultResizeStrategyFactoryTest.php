@@ -8,7 +8,6 @@ use App\Core\ResizeStrategy\ImmutableResizeStrategyFactory;
 use App\Core\ResizeStrategy\Exception\ResizeStrategyException;
 use App\Core\ResizeStrategy\ResizeStrategyFixed;
 use PHPUnit\Framework\TestCase;
-use Test\App\Core\Filesystem\TestFileFactory;
 
 final class DefaultResizeStrategyFactoryTest extends TestCase
 {
@@ -17,7 +16,7 @@ final class DefaultResizeStrategyFactoryTest extends TestCase
     protected function setUp(): void
     {
         $this->factory = new ImmutableResizeStrategyFactory([
-            'fixed' => new ResizeStrategyFixed(new TestFileFactory()),
+            'fixed' => new ResizeStrategyFixed(),
         ]);
     }
 

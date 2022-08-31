@@ -15,9 +15,9 @@ use App\UseCase\ServeResized\IndexAction;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Test\App\Core\ResizeStrategy\DummyResizeStrategy;
 use Test\App\Core\Source\TestImageSource;
 
@@ -29,14 +29,38 @@ final class IndexActionTest extends TestCase
     protected function setUp(): void
     {
         $this->source = new TestImageSource(new \SplFileObject(__DIR__ . '/tiny.jpg'));
-        $this->resizeStrategy = new DummyResizeStrategy();
+        $this->resizeStrategy = new DummyResizeStrategy('test');
     }
 
-    public function testItServesResizedImage(): void
+    public function testItServesResizedImage(): StreamedResponse
     {
         $response = $this->dispatch();
 
-        self::assertInstanceOf(BinaryFileResponse::class, $response);
+        self::assertInstanceOf(StreamedResponse::class, $response);
+
+        return $response;
+    }
+
+    /** @depends testItServesResizedImage */
+    public function testItServesProperContentType(StreamedResponse $response): void
+    {
+        self::assertSame('image/webp', $response->headers->get('Content-Type'));
+    }
+
+    /** @depends testItServesResizedImage */
+    public function testItServesInlineContent(StreamedResponse $response): void
+    {
+        self::assertSame('inline', $response->headers->get('Content-Disposition'));
+    }
+
+    /** @depends testItServesResizedImage */
+    public function testItServesThumbnailContent(StreamedResponse $response): void
+    {
+        \ob_start();
+        $response->sendContent();
+        $content = \ob_get_clean();
+
+        self::assertSame('test', $content);
     }
 
     public function testHandlesUnsupportedFormat(): void

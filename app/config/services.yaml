@@ -15,9 +15,6 @@ services:
         resource: '../src/UseCase/*/*Action.php'
         tags: [ { name: 'controller.service_arguments' } ]
 
-    App\Core\Filesystem\FilesystemFileFactory:
-        arguments: [ '%env(APP_FILESYSTEM_PATH)%' ]
-
     App\Core\ResizeStrategy\ImmutableResizeStrategyFactory:
         arguments: [ {
             'fixed': '@App\Core\ResizeStrategy\ResizeStrategyFixed',

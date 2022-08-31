@@ -4,17 +4,11 @@ declare(strict_types=1);
 
 namespace App\Core\ResizeStrategy;
 
-use App\Core\Filesystem\Exception\FilesystemException;
-use App\Core\Filesystem\FileFactory;
 use App\Core\Image\ImageInterface;
 use App\Core\ResizeStrategy\Exception\ResizeException;
 
 final class ResizeStrategyFixed implements ResizeStrategyInterface
 {
-    public function __construct (
-        private readonly FileFactory $filesystem,
-    ) {}
-
     /** {@inheritDoc} */
     public function __invoke(ImageInterface $image, SizeInterface $size): \SplFileObject
     {
@@ -22,10 +16,14 @@ final class ResizeStrategyFixed implements ResizeStrategyInterface
             throw new ResizeException();
         }
 
-        $imageFilename = \sprintf('%s.final.%s', $image->getImageId(), $image->getRequestedFormat());
+        $sourceBlob = '';
+        while (false === $image->getSource()->eof()) {
+            $sourceBlob .= $image->getSource()->fgets();
+        }
 
         try {
-            $im = new \Imagick($image->getSource()->getPathname());
+            $im = new \Imagick();
+            $im->readImageBlob($sourceBlob);
             $im->setImageFormat($image->getRequestedFormat());
             $im->thumbnailImage($size->getWidth(), $size->getHeight());
         } catch (\ImagickException $exception) {
@@ -37,17 +35,13 @@ final class ResizeStrategyFixed implements ResizeStrategyInterface
         }
 
         try {
-            $resizedImage = ($this->filesystem)($imageFilename, $im->getImageBlob());
-        } catch (FilesystemException $exception) {
+            $resizedImage = new \SplTempFileObject();
+            $resizedImage->fwrite($im->getImageBlob());
+            $resizedImage->fseek(0);
+        } catch (\Exception $exception) {
             throw new ResizeException(
-                'Could not create temporary image',
+                $exception->getMessage(),
                 (int) $exception->getCode(),
-                $exception,
-            );
-        } catch (\ImagickException $exception) {
-            throw new ResizeException(
-                \sprintf('Imagick: %s', $exception->getMessage()),
-                $exception->getCode(),
                 $exception,
             );
         }

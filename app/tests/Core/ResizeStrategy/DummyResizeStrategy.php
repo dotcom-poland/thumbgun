@@ -11,6 +11,7 @@ use App\Core\ResizeStrategy\SizeInterface;
 final class DummyResizeStrategy implements ResizeStrategyInterface
 {
     public function __construct(
+        private readonly string $content,
         private ?\Throwable $exception = null,
     ) {}
 
@@ -26,6 +27,10 @@ final class DummyResizeStrategy implements ResizeStrategyInterface
             throw $this->exception;
         }
 
-        return $image->getSource();
+        $file = new \SplTempFileObject(100);
+        $file->fwrite($this->content);
+        $file->fseek(0);
+
+        return $file;
     }
 }
