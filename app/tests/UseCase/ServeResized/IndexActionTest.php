@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Test\App\UseCase\ServeResized;
 
-use App\Core\Image\DefaultSizeFactory;
 use App\Core\Image\Exception\ImageException;
 use App\Core\Image\ImmutableSupportedImages;
 use App\Core\Processor\DefaultThumbnailProcessor;
+use App\Core\ResizeStrategy\DefaultSizeFactory;
 use App\Core\ResizeStrategy\ImmutableResizeStrategyFactory;
 use App\Core\Source\Exception\ImageNotFoundException;
 use App\Core\Source\ImmutableImageSourceFactory;

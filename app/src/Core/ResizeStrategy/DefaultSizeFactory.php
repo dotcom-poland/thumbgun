@@ -2,12 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Image;
+namespace App\Core\ResizeStrategy;
 
 use App\Core\ResizeStrategy\Exception\SizeException;
-use App\Core\ResizeStrategy\SizeRectangle;
-use App\Core\ResizeStrategy\SizeFactoryInterface;
-use App\Core\ResizeStrategy\SizeInterface;
 
 /** {@inheritDoc} */
 final class DefaultSizeFactory implements SizeFactoryInterface
