@@ -22,3 +22,17 @@ services:
         arguments: [ {
             'fixed': '@App\Core\ResizeStrategy\ResizeStrategyFixed',
         } ]
+
+    App\Core\Source\ImageSourceInterface: '@App\Core\Source\AWSS3ImageSource'
+
+    App\Core\Source\AWSS3ImageSource:
+        arguments:
+            $s3Bucket: '%env(AWS_S3_BUCKET)%'
+
+    Aws\S3\S3Client:
+        arguments:
+            - {
+                region: '%env(AWS_S3_REGION)%',
+                version: '%env(AWS_S3_VERSION)%',
+                credentials: { key: '%env(AWS_S3_KEY)%', secret: '%env(AWS_S3_SECRET)%' }
+            }
