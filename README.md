@@ -40,6 +40,30 @@ To disable:
 
 1. Make sure `docker-compose.xdebug.yml` is not included in your `.env`
 
+## Configuring AWS S3 access
+
+1. Create a policy in the AWS IAM console to grant accessto the 
+   to the S3 bucket containing your images
+2. Create a programmatic user in the AWS IAM console 
+   with the policy above attached to it and store the credentials
+3. Copy the `app/.env.local.dist` to `app/.env.local` and modify the values
+
+Example IAM policy granting only read access to a bucket:
+
+```yaml
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::your-bucket-name/*"
+        }
+    ]
+}
+```
+
 ## Generating image url
 
 CLI tool is available to generate image link, eg:
