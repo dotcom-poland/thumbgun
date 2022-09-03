@@ -9,6 +9,8 @@
 !/var/cache/.gitkeep
 /var/log/*
 !/var/log/.gitkeep
+/var/storage/*
+!/var/storage/.gitkeep
 /vendor/
 ###< symfony/framework-bundle ###
 

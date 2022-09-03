@@ -25,6 +25,13 @@ services:
 
     App\Core\Source\ImageSourceInterface: '@App\Core\Source\AWSS3ImageSource'
 
+    App\Core\Source\CachingImageSourceDecorator:
+        decorates: 'App\Core\Source\ImageSourceInterface'
+        arguments:
+            $source: '@.inner'
+            $rootDirectory: '%kernel.project_dir%'
+            $storageDirectory: '%env(APP_STORAGE)%'
+
     App\Core\Source\AWSS3ImageSource:
         arguments:
             $s3Bucket: '%env(AWS_S3_BUCKET)%'
@@ -36,3 +43,4 @@ services:
                 version: '%env(AWS_S3_VERSION)%',
                 credentials: { key: '%env(AWS_S3_KEY)%', secret: '%env(AWS_S3_SECRET)%' }
             }
+
