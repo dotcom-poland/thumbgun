@@ -7,29 +7,23 @@ use PHPUnit\Framework\TestCase;
 
 final class CachingImageSourceDecoratorTest extends TestCase
 {
-    private const IMAGE_PATH = '/tmp/foo/image.jpg';
+    private const IMAGE_PATH = '/tmp/image.jpg';
 
     private readonly CachingImageSourceDecorator $source;
 
     protected function setUp(): void
     {
-        $this->source = new CachingImageSourceDecorator(
-            new TestImageSource(),
-            \sys_get_temp_dir(),
-            'foo',
-        );
+        $this->source = new CachingImageSourceDecorator(new TestImageSource(), '/tmp');
     }
 
     protected function tearDown(): void
     {
         \unlink(self::IMAGE_PATH);
-        \rmdir(\dirname(self::IMAGE_PATH));
         \clearstatcache();
     }
 
     public function testItServesImageFromFilesystemIfFileExists(): void
     {
-        \mkdir(\dirname(self::IMAGE_PATH));
         \file_put_contents(self::IMAGE_PATH, 'bar');
 
         $image = ($this->source)('image.jpg', 'webp');
