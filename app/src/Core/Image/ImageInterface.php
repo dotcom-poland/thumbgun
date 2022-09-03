@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Image;
 
+use Closure;
+
 interface ImageInterface
 {
     /** @return non-empty-string */
@@ -12,5 +14,6 @@ interface ImageInterface
     /** @return non-empty-string */
     public function getRequestedFormat(): string;
 
-    public function getSource(): \SplFileObject;
+    /** @return Closure():string */
+    public function getSource(): Closure;
 }

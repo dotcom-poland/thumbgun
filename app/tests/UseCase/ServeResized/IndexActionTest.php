@@ -29,7 +29,7 @@ final class IndexActionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->source = new TestImageSource(new \SplFileObject(__DIR__ . '/tiny.jpg'));
+        $this->source = new TestImageSource(__DIR__ . '/tiny.jpg');
         $this->resizeStrategy = new DummyResizeStrategy('test');
     }
 

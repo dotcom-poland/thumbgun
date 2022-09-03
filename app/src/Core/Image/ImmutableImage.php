@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Core\Image;
 
 use App\Core\Image\Exception\ImageException;
+use Closure;
 
 final class ImmutableImage implements ImageInterface
 {
@@ -19,10 +20,15 @@ final class ImmutableImage implements ImageInterface
     /** @var non-empty-string */
     private readonly string $requestedFormat;
 
-    private readonly \SplFileObject $source;
+    /** @var Closure():string */
+    private readonly Closure $source;
 
-    /** @throws ImageException */
-    public function __construct(string $imageId, string $requestedFormat, \SplFileObject $source)
+    /**
+     * @param Closure():string $source
+     *
+     * @throws ImageException
+     */
+    public function __construct(string $imageId, string $requestedFormat, Closure $source)
     {
         if (empty($imageId) || self::containsDangerousSymbols($imageId)) {
             throw new ImageException('Image id empty');
@@ -56,7 +62,8 @@ final class ImmutableImage implements ImageInterface
         return $this->requestedFormat;
     }
 
-    public function getSource(): \SplFileObject
+    /** {@inheritDoc} */
+    public function getSource(): Closure
     {
         return $this->source;
     }

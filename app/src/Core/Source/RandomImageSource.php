@@ -13,17 +13,15 @@ final class RandomImageSource implements ImageSourceInterface
     /** {@inheritDoc} */
     public function __invoke(string $imageId, string $imageFormat): ImageInterface
     {
-        $randomImageUrl = \sprintf('https://picsum.photos/seed/%s/1000/1000', \sha1($imageId));
-        $randomImageData = \file_get_contents($randomImageUrl);
+        return new ImmutableImage($imageId, $imageFormat, static function () use ($imageId): string {
+            $randomImageUrl = \sprintf('https://picsum.photos/seed/%s/1000/1000', \sha1($imageId));
+            $randomImageData = \file_get_contents($randomImageUrl);
 
-        if (!$randomImageData) {
-            throw new ImageSourceException('Could not download the image');
-        }
+            if (!$randomImageData) {
+                throw new ImageSourceException('Could not download the image');
+            }
 
-        $file = new \SplTempFileObject();
-        $file->fwrite($randomImageData);
-        $file->fseek(0);
-
-        return new ImmutableImage($imageId, $imageFormat, $file);
+            return $randomImageData;
+        });
     }
 }

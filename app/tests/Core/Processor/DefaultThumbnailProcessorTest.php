@@ -16,22 +16,17 @@ final class DefaultThumbnailProcessorTest extends TestCase
 {
     public function testItReturnsResizeResult(): void
     {
-        $file = new \SplTempFileObject();
-        $image = new ImmutableImage('id', 'jpg', $file);
+        $image = new ImmutableImage('id', 'jpg', static fn(): string => '');
         $size = SizeRectangle::fromString('300x275');
-        $strategy = new class($file) implements ResizeStrategyInterface {
-            public function __construct(
-                private readonly \SplFileObject $file,
-            ) {}
-
+        $strategy = new class implements ResizeStrategyInterface {
             public function __invoke(ImageInterface $image, SizeInterface $size): \SplFileObject
             {
-                return $this->file;
+                return new \SplTempFileObject();
             }
         };
 
         $result = (new DefaultThumbnailProcessor())($image, $strategy, $size);
 
-        self::assertSame($file, $result);
+        self::assertInstanceOf(\SplTempFileObject::class, $result);
     }
 }
