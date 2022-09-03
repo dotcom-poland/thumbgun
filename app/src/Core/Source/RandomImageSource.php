@@ -6,7 +6,6 @@ namespace App\Core\Source;
 
 use App\Core\Image\ImageInterface;
 use App\Core\Image\ImmutableImage;
-use App\Core\Source\Exception\ImageSourceException;
 
 final class RandomImageSource implements ImageSourceInterface
 {
@@ -18,7 +17,7 @@ final class RandomImageSource implements ImageSourceInterface
             $randomImageData = \file_get_contents($randomImageUrl);
 
             if (!$randomImageData) {
-                throw new ImageSourceException('Could not download the image');
+                throw new \RuntimeException('Could not download random image from Picsum');
             }
 
             return $randomImageData;

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Core\ResizeStrategy;
 
 use App\Core\Image\ImageInterface;
-use App\Core\ResizeStrategy\Exception\ResizeException;
 
 final class ResizeStrategyFixed implements ResizeStrategyInterface
 {
@@ -13,21 +12,17 @@ final class ResizeStrategyFixed implements ResizeStrategyInterface
     public function resize(ImageInterface $image, SizeInterface $size): string
     {
         if (false === ($size instanceof SizeRectangle)) {
-            throw new ResizeException();
+            throw new \InvalidArgumentException(\sprintf(
+                'Expected %s got %s',
+                SizeRectangle::class,
+                \get_class($size),
+            ));
         }
 
-        try {
-            $im = new \Imagick();
-            $im->readImageBlob($image->getSource()());
-            $im->setImageFormat($image->getRequestedFormat());
-            $im->thumbnailImage($size->getWidth(), $size->getHeight());
-        } catch (\ImagickException $exception) {
-            throw new ResizeException(
-                \sprintf('Imagick: %s', $exception->getMessage()),
-                $exception->getCode(),
-                $exception,
-            );
-        }
+        $im = new \Imagick();
+        $im->readImageBlob($image->getSource()());
+        $im->setImageFormat($image->getRequestedFormat());
+        $im->thumbnailImage($size->getWidth(), $size->getHeight());
 
         try {
             return $im->getImageBlob();
