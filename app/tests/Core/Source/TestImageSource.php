@@ -11,7 +11,6 @@ use App\Core\Source\ImageSourceInterface;
 final class TestImageSource implements ImageSourceInterface
 {
     public function __construct (
-        private readonly string $imagePath,
         private ?\Throwable $exception = null
     ) {}
 
@@ -23,7 +22,7 @@ final class TestImageSource implements ImageSourceInterface
         }
 
         return new ImmutableImage($imageId, $imageFormat, function (): string {
-            return \file_get_contents($this->imagePath);
+            return \file_get_contents(__DIR__ . '/tiny.jpg');
         });
     }
 
