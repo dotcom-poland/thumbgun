@@ -101,9 +101,7 @@ final class IndexAction
             );
         }
 
-        $response = new StreamedResponse(static function () use ($thumbnail): void {
-            $thumbnail->fpassthru();
-        });
+        $response = new Response($thumbnail);
 
         $response->headers->set(
             'Content-Type',

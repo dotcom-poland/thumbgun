@@ -17,7 +17,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Test\App\Core\ResizeStrategy\DummyResizeStrategy;
 use Test\App\Core\Security\TestChecksumValidator;
 use Test\App\Core\Source\TestImageSource;
@@ -33,35 +32,31 @@ final class IndexActionTest extends TestCase
         $this->resizeStrategy = new DummyResizeStrategy('test');
     }
 
-    public function testItServesResizedImage(): StreamedResponse
+    public function testItServesResizedImage(): Response
     {
         $response = $this->dispatch();
 
-        self::assertInstanceOf(StreamedResponse::class, $response);
+        self::assertInstanceOf(Response::class, $response);
 
         return $response;
     }
 
     /** @depends testItServesResizedImage */
-    public function testItServesProperContentType(StreamedResponse $response): void
+    public function testItServesProperContentType(Response $response): void
     {
         self::assertSame('image/webp', $response->headers->get('Content-Type'));
     }
 
     /** @depends testItServesResizedImage */
-    public function testItServesInlineContent(StreamedResponse $response): void
+    public function testItServesInlineContent(Response $response): void
     {
         self::assertSame('inline', $response->headers->get('Content-Disposition'));
     }
 
     /** @depends testItServesResizedImage */
-    public function testItServesThumbnailContent(StreamedResponse $response): void
+    public function testItServesThumbnailContent(Response $response): void
     {
-        \ob_start();
-        $response->sendContent();
-        $content = \ob_get_clean();
-
-        self::assertSame('test', $content);
+        self::assertSame('test', $response->getContent());
     }
 
     public function testHandlesInvalidChecksum(): void

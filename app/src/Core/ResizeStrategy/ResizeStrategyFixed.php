@@ -10,7 +10,7 @@ use App\Core\ResizeStrategy\Exception\ResizeException;
 final class ResizeStrategyFixed implements ResizeStrategyInterface
 {
     /** {@inheritDoc} */
-    public function resize(ImageInterface $image, SizeInterface $size): \SplFileObject
+    public function resize(ImageInterface $image, SizeInterface $size): string
     {
         if (false === ($size instanceof SizeRectangle)) {
             throw new ResizeException();
@@ -30,18 +30,10 @@ final class ResizeStrategyFixed implements ResizeStrategyInterface
         }
 
         try {
-            $resizedImage = new \SplTempFileObject();
-            $resizedImage->fwrite($im->getImageBlob());
-            $resizedImage->fseek(0);
-        } catch (\Exception $exception) {
-            throw new ResizeException(
-                $exception->getMessage(),
-                (int) $exception->getCode(),
-                $exception,
-            );
+            return $im->getImageBlob();
+        } finally {
+            $im->clear();
         }
-
-        return $resizedImage;
     }
 
     public function toString(): string

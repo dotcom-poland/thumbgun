@@ -17,5 +17,5 @@ interface ThumbnailProcessorInterface
         ImageInterface $image,
         ResizeStrategyInterface $strategy,
         SizeInterface $size
-    ): \SplFileObject;
+    ): string;
 }

@@ -50,7 +50,7 @@ final class CachingThumbnailProcessorDecoratorTest extends TestCase
             SizeRectangle::fromString('300x275'),
         );
 
-        self::assertEquals('existing-jpeg-content', $result->fgets());
+        self::assertEquals('existing-jpeg-content', $result);
     }
 
     public function testItServesImageFromSourceIfFileDoesNotExist(): void
@@ -61,19 +61,15 @@ final class CachingThumbnailProcessorDecoratorTest extends TestCase
             SizeRectangle::fromString('300x275'),
         );
 
-        self::assertEquals('new-jpeg-content', $result->fgets());
+        self::assertEquals('new-jpeg-content', $result);
     }
 
     private function createStrategy(): ResizeStrategyInterface
     {
         return new class implements ResizeStrategyInterface {
-            public function resize(ImageInterface $image, SizeInterface $size): \SplFileObject
+            public function resize(ImageInterface $image, SizeInterface $size): string
             {
-                $result = new \SplTempFileObject();
-                $result->fwrite($image->getSource()());
-                $result->fseek(0);
-
-                return $result;
+                return $image->getSource()();
             }
 
             public function toString(): string

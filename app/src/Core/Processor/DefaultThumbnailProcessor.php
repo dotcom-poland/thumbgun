@@ -15,7 +15,7 @@ final class DefaultThumbnailProcessor implements ThumbnailProcessorInterface
         ImageInterface $image,
         ResizeStrategyInterface $strategy,
         SizeInterface $size
-    ): \SplFileObject {
+    ): string {
         return $strategy->resize($image, $size);
     }
 }
