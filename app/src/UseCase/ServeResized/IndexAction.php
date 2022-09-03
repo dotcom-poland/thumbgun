@@ -18,10 +18,11 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class IndexAction
 {
+    private const YEAR = 31536000;
+
     public function __construct(
         private readonly ChecksumValidatorInterface     $checksumValidator,
         private readonly SupportedImagesInterface       $supportedFormats,
@@ -101,7 +102,10 @@ final class IndexAction
             );
         }
 
-        $response = new Response($thumbnail);
+        $response = (new Response($thumbnail))
+            ->setPublic()
+            ->setImmutable()
+            ->setMaxAge(self::YEAR);
 
         $response->headers->set(
             'Content-Type',
