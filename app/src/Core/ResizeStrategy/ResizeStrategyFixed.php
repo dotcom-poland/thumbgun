@@ -16,14 +16,9 @@ final class ResizeStrategyFixed implements ResizeStrategyInterface
             throw new ResizeException();
         }
 
-        $sourceBlob = '';
-        while (false === $image->getSource()->eof()) {
-            $sourceBlob .= $image->getSource()->fgets();
-        }
-
         try {
             $im = new \Imagick();
-            $im->readImageBlob($sourceBlob);
+            $im->readImageBlob($image->getSource()());
             $im->setImageFormat($image->getRequestedFormat());
             $im->thumbnailImage($size->getWidth(), $size->getHeight());
         } catch (\ImagickException $exception) {

@@ -11,7 +11,7 @@ use App\Core\Source\ImageSourceInterface;
 final class TestImageSource implements ImageSourceInterface
 {
     public function __construct (
-        private readonly \SplFileObject $image,
+        private readonly string $imagePath,
         private ?\Throwable $exception = null
     ) {}
 
@@ -22,7 +22,9 @@ final class TestImageSource implements ImageSourceInterface
             throw $this->exception;
         }
 
-        return new ImmutableImage($imageId, $imageFormat, $this->image);
+        return new ImmutableImage($imageId, $imageFormat, function (): string {
+            return \file_get_contents($this->imagePath);
+        });
     }
 
     public function setThrownException(?\Throwable $exception): void

@@ -14,14 +14,14 @@ final class ImmutableImageTest extends TestCase
     {
         $this->expectException(ImageException::class);
 
-        new ImmutableImage('', 'jpeg', new \SplTempFileObject());
+        new ImmutableImage('', 'jpeg', static fn(): string => '');
     }
 
     public function testItDoesNotAllowEmptyRequestFormat(): void
     {
         $this->expectException(ImageException::class);
 
-        new ImmutableImage('123', '', new \SplTempFileObject());
+        new ImmutableImage('123', '', static fn(): string => '');
     }
 
     /** @dataProvider invalidImageIdProvider */
@@ -29,7 +29,7 @@ final class ImmutableImageTest extends TestCase
     {
         $this->expectException(ImageException::class);
 
-        new ImmutableImage($imageId, 'jpeg', new \SplTempFileObject());
+        new ImmutableImage($imageId, 'jpeg', static fn(): string => '');
     }
 
     public function invalidImageIdProvider(): iterable
