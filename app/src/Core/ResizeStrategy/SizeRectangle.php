@@ -59,4 +59,9 @@ final class SizeRectangle implements SizeInterface
     {
         return $this->height;
     }
+
+    public function toString(): string
+    {
+        return \sprintf('%dx%d', $this->width, $this->height);
+    }
 }

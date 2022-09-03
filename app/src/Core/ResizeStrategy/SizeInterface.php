@@ -6,4 +6,5 @@ namespace App\Core\ResizeStrategy;
 
 interface SizeInterface
 {
+    public function toString(): string;
 }

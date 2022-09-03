@@ -10,7 +10,7 @@ use App\Core\ResizeStrategy\Exception\ResizeException;
 final class ResizeStrategyFixed implements ResizeStrategyInterface
 {
     /** {@inheritDoc} */
-    public function __invoke(ImageInterface $image, SizeInterface $size): \SplFileObject
+    public function resize(ImageInterface $image, SizeInterface $size): \SplFileObject
     {
         if (false === ($size instanceof SizeRectangle)) {
             throw new ResizeException();
@@ -42,5 +42,10 @@ final class ResizeStrategyFixed implements ResizeStrategyInterface
         }
 
         return $resizedImage;
+    }
+
+    public function toString(): string
+    {
+        return 'fixed';
     }
 }

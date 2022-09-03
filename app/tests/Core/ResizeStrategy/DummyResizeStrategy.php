@@ -21,7 +21,7 @@ final class DummyResizeStrategy implements ResizeStrategyInterface
     }
 
     /** {@inheritDoc} */
-    public function __invoke(ImageInterface $image, SizeInterface $size): \SplFileObject
+    public function resize(ImageInterface $image, SizeInterface $size): \SplFileObject
     {
         if ($this->exception) {
             throw $this->exception;
@@ -32,5 +32,10 @@ final class DummyResizeStrategy implements ResizeStrategyInterface
         $file->fseek(0);
 
         return $file;
+    }
+
+    public function toString(): string
+    {
+        return 'dummy';
     }
 }
