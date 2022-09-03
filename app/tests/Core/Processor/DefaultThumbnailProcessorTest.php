@@ -19,9 +19,14 @@ final class DefaultThumbnailProcessorTest extends TestCase
         $image = new ImmutableImage('id', 'jpg', static fn(): string => '');
         $size = SizeRectangle::fromString('300x275');
         $strategy = new class implements ResizeStrategyInterface {
-            public function __invoke(ImageInterface $image, SizeInterface $size): \SplFileObject
+            public function resize(ImageInterface $image, SizeInterface $size): \SplFileObject
             {
                 return new \SplTempFileObject();
+            }
+
+            public function toString(): string
+            {
+                return 'foo';
             }
         };
 

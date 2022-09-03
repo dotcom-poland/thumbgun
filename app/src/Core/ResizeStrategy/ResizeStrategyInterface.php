@@ -9,8 +9,10 @@ use App\Core\ResizeStrategy\Exception\ResizeException;
 
 interface ResizeStrategyInterface
 {
+    public function toString(): string;
+
     /**
      * @throws ResizeException
      */
-    public function __invoke(ImageInterface $image, SizeInterface $size): \SplFileObject;
+    public function resize(ImageInterface $image, SizeInterface $size): \SplFileObject;
 }

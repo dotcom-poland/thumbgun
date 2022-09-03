@@ -41,4 +41,11 @@ final class SizeRectangleTest extends TestCase
         yield 'width starts with zero' => ['020x300'];
         yield 'height starts with zero' => ['200x030'];
     }
+
+    public function testToString(): void
+    {
+        $size = SizeRectangle::fromString('110x80');
+
+        self::assertEquals('110x80', $size->toString());
+    }
 }

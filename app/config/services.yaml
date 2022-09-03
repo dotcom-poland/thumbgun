@@ -23,6 +23,14 @@ services:
             'fixed': '@App\Core\ResizeStrategy\ResizeStrategyFixed',
         } ]
 
+    App\Core\Processor\ThumbnailProcessorInterface: '@App\Core\Processor\DefaultThumbnailProcessor'
+
+    App\Core\Processor\CachingThumbnailProcessorDecorator:
+        decorates: 'App\Core\Processor\ThumbnailProcessorInterface'
+        arguments:
+            $processor: '@.inner'
+            $storage: '%env(APP_STORAGE_RESIZED)%'
+
     App\Core\Source\ImageSourceInterface: '@App\Core\Source\AWSS3ImageSource'
 
     App\Core\Source\CachingImageSourceDecorator:
