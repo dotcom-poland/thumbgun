@@ -14,5 +14,5 @@ interface ResizeStrategyInterface
     /**
      * @throws ResizeException
      */
-    public function resize(ImageInterface $image, SizeInterface $size): \SplFileObject;
+    public function resize(ImageInterface $image, SizeInterface $size): string;
 }

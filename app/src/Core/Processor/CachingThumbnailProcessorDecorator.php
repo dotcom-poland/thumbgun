@@ -20,7 +20,7 @@ final class CachingThumbnailProcessorDecorator implements ThumbnailProcessorInte
         ImageInterface $image,
         ResizeStrategyInterface $strategy,
         SizeInterface $size
-    ): \SplFileObject {
+    ): string {
         $imagePath = \sprintf(
             '%s/%s/%s/%s/%s/%s',
             $this->storage,
@@ -32,22 +32,17 @@ final class CachingThumbnailProcessorDecorator implements ThumbnailProcessorInte
         );
 
         if (\file_exists($imagePath)) {
-            return new \SplFileObject($imagePath);
+            return \file_get_contents($imagePath);
         }
 
         if (false === \is_dir(\dirname($imagePath))) {
             \mkdir(\dirname($imagePath), 0777, true);
         }
 
-        $resizedImage = ($this->processor)($image, $strategy, $size);
-
-        $blob = '';
-        while (!$resizedImage->eof()) {
-            $blob .= $resizedImage->fgets();
-        }
+        $blob = ($this->processor)($image, $strategy, $size);
 
         \file_put_contents($imagePath, $blob);
 
-        return new \SplFileObject($imagePath);
+        return $blob;
     }
 }

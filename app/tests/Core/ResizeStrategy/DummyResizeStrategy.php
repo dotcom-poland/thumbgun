@@ -21,17 +21,13 @@ final class DummyResizeStrategy implements ResizeStrategyInterface
     }
 
     /** {@inheritDoc} */
-    public function resize(ImageInterface $image, SizeInterface $size): \SplFileObject
+    public function resize(ImageInterface $image, SizeInterface $size): string
     {
         if ($this->exception) {
             throw $this->exception;
         }
 
-        $file = new \SplTempFileObject(100);
-        $file->fwrite($this->content);
-        $file->fseek(0);
-
-        return $file;
+        return $this->content;
     }
 
     public function toString(): string
