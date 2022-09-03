@@ -29,7 +29,7 @@ services:
         decorates: 'App\Core\Source\ImageSourceInterface'
         arguments:
             $source: '@.inner'
-            $storage: '%env(APP_STORAGE)%'
+            $storage: '%env(APP_STORAGE_SOURCES)%'
 
     App\Core\Source\AWSS3ImageSource:
         arguments:
