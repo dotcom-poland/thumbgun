@@ -1,3 +1,7 @@
+homepage:
+    controller: App\UseCase\Homepage\IndexAction
+    path: /
+
 thumbnail_serve:
     controller: App\UseCase\ServeResized\IndexAction
     path: /t/{checksum}/{strategy}/{size}/{format}/{id}
