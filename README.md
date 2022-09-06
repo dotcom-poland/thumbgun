@@ -10,18 +10,20 @@ A Symfony application that in response to a specific GET request:
 2. resizes the image on the fly,
 3. outputs the image in the requested output format.
 
-## Running
+## Installing locally
 
 1. Add `thumbgun.local` to the `hosts` of your system
 2. Copy `.env.dist` to `.env` and modify which `docker-compose.yml` files to use
-3. Run `docker-compose up -d`
-4. Install vendors `docker-compose exec php composer install`
+3. Copy `app/.env.local.dist` to `app/.env.local` and modify accordingly
+4. Run `docker-compose up -d` (`docker-compose down` if you have any issues)
+5. Install vendors `docker-compose exec php composer install`
+6. Open `http://thumbgun.local`
 
 ## Stopping
 
 `docker-compose down`
 
-### Are you working in Linux? Fix permission issues
+## Are you working in Linux? Fix permission issues
 
 1. Copy `docker-compose.custom.yml.dist` to `docker-compose.custom.yml`
 2. Change `USER_UID` and `USER_GID` to your user's id and group id
