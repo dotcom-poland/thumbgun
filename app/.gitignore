@@ -7,6 +7,8 @@
 /public/bundles/
 /var/cache/*
 !/var/cache/.gitkeep
+/var/lock/*
+!/var/lock/.gitkeep
 /var/log/*
 !/var/log/.gitkeep
 /var/storage/*
