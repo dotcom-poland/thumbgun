@@ -1,0 +1,4 @@
+services:
+    php:
+        volumes:
+            - ./artifacts/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini

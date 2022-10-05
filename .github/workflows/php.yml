@@ -31,7 +31,7 @@ jobs:
                         ${{ runner.os }}-php-
 
             -   name: Install dependencies
-                run: composer install --prefer-dist --no-progress --no-suggest -o -n
+                run: composer install --prefer-dist --no-progress --no-suggest -a -o -n
 
             -   name: Run unit tests
                 run: bin/phpunit
@@ -40,7 +40,7 @@ jobs:
                 run: cp -f vendor/psalm/phar/psalm.phar /tmp/psalm.phar
 
             -   name: Uninstall dev dependencies
-                run: composer install -o -n --no-dev
+                run: composer install -a -o -n --no-dev
 
             -   name: Static analysis
                 run: /tmp/psalm.phar
