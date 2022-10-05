@@ -29,6 +29,9 @@ RUN apk add --no-cache bash && \
 # XDebug from PECL
 RUN pecl install xdebug-3.1.5
 
+# OPcache module
+RUN docker-php-ext-enable opcache
+
 # Necessary build deps not longer needed
 RUN apk del --no-cache ${PHPIZE_DEPS} \
     && docker-php-source delete
