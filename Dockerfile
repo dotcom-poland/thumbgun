@@ -30,7 +30,8 @@ RUN apk add --no-cache bash && \
 RUN pecl install xdebug-3.1.5
 
 # Necessary build deps not longer needed
-RUN apk del --no-cache ${PHPIZE_DEPS}
+RUN apk del --no-cache ${PHPIZE_DEPS} \
+    && docker-php-source delete
 
 # Composer
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
