@@ -2,7 +2,9 @@
 
 namespace App\Core\Image;
 
+use App\Core\RequestContextInterface;
+
 interface SupportedImagesInterface
 {
-    public function isSupported(string $requestedFormat): bool;
+    public function isSupported(RequestContextInterface $context): bool;
 }

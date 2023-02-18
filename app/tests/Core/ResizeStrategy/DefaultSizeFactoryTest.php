@@ -8,12 +8,13 @@ use App\Core\ResizeStrategy\DefaultSizeFactory;
 use App\Core\ResizeStrategy\Exception\SizeException;
 use App\Core\ResizeStrategy\SizeRectangle;
 use PHPUnit\Framework\TestCase;
+use Test\App\Core\ContextMock;
 
 final class DefaultSizeFactoryTest extends TestCase
 {
     public function testItReturnsRectangle(): void
     {
-        $size = (new DefaultSizeFactory())('200x300');
+        $size = (new DefaultSizeFactory())(new ContextMock(sizeFormat: '200x300'));
 
         self::assertInstanceOf(SizeRectangle::class, $size);
         self::assertEquals(200, $size->getWidth());
@@ -24,6 +25,6 @@ final class DefaultSizeFactoryTest extends TestCase
     {
         $this->expectException(SizeException::class);
 
-        (new DefaultSizeFactory())('foo');
+        (new DefaultSizeFactory())(new ContextMock(sizeFormat: 'foo'));
     }
 }

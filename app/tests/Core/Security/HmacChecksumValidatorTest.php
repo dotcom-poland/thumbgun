@@ -8,6 +8,7 @@ use App\Core\Security\Sha1ChecksumBuilder;
 use App\Core\Security\HmacChecksumValidator;
 use App\Core\Security\StringKeyVault;
 use PHPUnit\Framework\TestCase;
+use Test\App\Core\ContextMock;
 
 final class HmacChecksumValidatorTest extends TestCase
 {
@@ -25,24 +26,23 @@ final class HmacChecksumValidatorTest extends TestCase
     {
         $expectedChecksumForKey2 = 'sas46pon45k';
 
-        self::assertTrue(($this->checksumValidator)(
+        self::assertTrue(($this->checksumValidator)(new ContextMock(
+            $expectedChecksumForKey2,
             'fixed',
             '50x50',
-            '2030004030',
             'webp',
-            $expectedChecksumForKey2,
-        ));
+            '2030004030'
+        )));
     }
-
 
     public function testItReturnsFalseOnInvalidChecksum(): void
     {
-        self::assertFalse(($this->checksumValidator)(
+        self::assertFalse(($this->checksumValidator)(new ContextMock(
+            'checksum',
             'fixed',
             '50x50',
-            'random',
+            'webp',
             '2030004030',
-            'checksum',
-        ));
+        )));
     }
 }

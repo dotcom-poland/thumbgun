@@ -6,6 +6,7 @@ namespace App\Core\Source;
 
 use App\Core\Image\ImageInterface;
 use App\Core\Image\ImmutableImage;
+use App\Core\RequestContextInterface;
 use Aws\S3\S3Client;
 use Psr\Http\Message\StreamInterface;
 
@@ -21,8 +22,11 @@ final class AWSS3ImageSource implements ImageSourceInterface
     }
 
     /** {@inheritDoc} */
-    public function __invoke(string $imageId, string $imageFormat): ImageInterface
+    public function __invoke(RequestContextInterface $context): ImageInterface
     {
+        $imageId = $context->getImageId();
+        $imageFormat = $context->getImageFormat();
+
         return new ImmutableImage($imageId, $imageFormat, function () use ($imageId): string {
             $object = $this->s3Client->getObject([
                 'Key' => $imageId,

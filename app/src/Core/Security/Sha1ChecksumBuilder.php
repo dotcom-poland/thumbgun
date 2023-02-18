@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace App\Core\Security;
 
+use App\Core\RequestContextInterface;
+
 /** {@inheritDoc} */
 final class Sha1ChecksumBuilder implements ChecksumBuilderInterface
 {
     private const ALGO = 'sha1';
 
-    public function __invoke(
-        KeyInterface $key,
-        string $strategy,
-        string $size,
-        string $imageId,
-        string $format,
-    ): string {
-        $string = \sprintf('%s:%s:%s:%s', $strategy, $size, $imageId, $format);
+    public function __invoke(KeyInterface $key, RequestContextInterface $context): string
+    {
+        $string = \sprintf(
+            '%s:%s:%s:%s',
+            $context->getStrategyName(),
+            $context->getSizeFormat(),
+            $context->getImageId(),
+            $context->getImageFormat(),
+        );
 
         /** @psalm-suppress ImpureFunctionCall */
         if (false === \in_array(self::ALGO, \hash_hmac_algos(), true)) {

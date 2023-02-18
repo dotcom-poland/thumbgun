@@ -9,6 +9,7 @@ use Aws\S3\S3Client;
 use GuzzleHttp\Psr7\BufferStream;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Test\App\Core\ContextMock;
 
 final class AWSS3ImageSourceTest extends TestCase
 {
@@ -27,21 +28,21 @@ final class AWSS3ImageSourceTest extends TestCase
 
     public function testResponseHasProperId(): void
     {
-        $image = ($this->source)('a/b/c.jpeg', 'webp');
+        $image = ($this->source)(new ContextMock(imageFormat: 'webp', imageId: 'a/b/c.jpeg'));
 
         self::assertSame('a/b/c.jpeg', $image->getImageId());
     }
 
     public function testResponseHasProperRequestedImageFormat(): void
     {
-        $image = ($this->source)('a/b/c.jpeg', 'webp');
+        $image = ($this->source)(new ContextMock(imageFormat: 'webp', imageId: 'a/b/c.jpeg'));
 
         self::assertSame('webp', $image->getRequestedFormat());
     }
 
     public function testResponseHasProperImageContent(): void
     {
-        $image = ($this->source)('a/b/c.jpeg', 'webp');
+        $image = ($this->source)(new ContextMock(imageFormat: 'webp', imageId: 'a/b/c.jpeg'));
 
         $body = new BufferStream();
         $body->write('test');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Test\App\UseCase\ServeResized;
 
+use App\Core\Context\SymfonyRequestContextFactory;
 use App\Core\Image\Exception\ImageException;
 use App\Core\Image\ImmutableSupportedImages;
 use App\Core\Processor\DefaultThumbnailProcessor;
@@ -16,6 +17,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Test\App\Core\ResizeStrategy\DummyResizeStrategy;
 use Test\App\Core\Security\TestChecksumValidator;
@@ -36,7 +38,7 @@ final class IndexActionTest extends TestCase
     {
         $response = $this->dispatch();
 
-        self::assertInstanceOf(Response::class, $response);
+        $this->expectNotToPerformAssertions();
 
         return $response;
     }
@@ -136,16 +138,6 @@ final class IndexActionTest extends TestCase
 
     private function dispatch(array $attributes = []): Response
     {
-        $action = new IndexAction(
-            new TestChecksumValidator(),
-            new ImmutableSupportedImages(['webp']),
-            new DefaultSizeFactory(),
-            new ImmutableResizeStrategyFactory(['dummy' => $this->resizeStrategy]),
-            new ImmutableImageSourceFactory($this->source),
-            new DefaultThumbnailProcessor(),
-            new NullLogger(),
-        );
-
         $attributes = \array_merge([
             'strategy' => 'dummy',
             'size' => '50x50',
@@ -164,6 +156,20 @@ final class IndexActionTest extends TestCase
             ['checksum' => $checksum],
             $attributes,
         ));
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $action = new IndexAction(
+            new SymfonyRequestContextFactory($requestStack),
+            new TestChecksumValidator(),
+            new ImmutableSupportedImages(['webp']),
+            new DefaultSizeFactory(),
+            new ImmutableResizeStrategyFactory(['dummy' => $this->resizeStrategy]),
+            new ImmutableImageSourceFactory($this->source),
+            new DefaultThumbnailProcessor(),
+            new NullLogger(),
+        );
 
         return $action($request);
     }

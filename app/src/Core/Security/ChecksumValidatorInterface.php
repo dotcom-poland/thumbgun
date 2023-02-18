@@ -2,16 +2,12 @@
 
 namespace App\Core\Security;
 
+use App\Core\RequestContextInterface;
+
 /**
  * @psalm-pure
  */
 interface ChecksumValidatorInterface
 {
-    public function __invoke(
-        string $strategy,
-        string $size,
-        string $imageId,
-        string $format,
-        string $checksum,
-    ): bool;
+    public function __invoke(RequestContextInterface $context): bool;
 }

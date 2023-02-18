@@ -6,6 +6,7 @@ namespace Test\App\Core\Image;
 
 use App\Core\Image\ImmutableSupportedImages;
 use PHPUnit\Framework\TestCase;
+use Test\App\Core\ContextMock;
 
 final class ImmutableSupportedImagesTest extends TestCase
 {
@@ -13,13 +14,13 @@ final class ImmutableSupportedImagesTest extends TestCase
     {
         $sut = new ImmutableSupportedImages(['jpeg', 'gif']);
 
-        self::assertTrue($sut->isSupported('gif'));
+        self::assertTrue($sut->isSupported(new ContextMock(imageFormat: 'jpeg')));
     }
 
     public function testUnsupportedFormat(): void
     {
         $sut = new ImmutableSupportedImages(['png', 'jpeg']);
 
-        self::assertFalse($sut->isSupported('bmp'));
+        self::assertFalse($sut->isSupported(new ContextMock(imageFormat: 'bmp')));
     }
 }
