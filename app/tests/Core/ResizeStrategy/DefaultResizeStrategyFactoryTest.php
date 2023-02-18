@@ -8,6 +8,7 @@ use App\Core\ResizeStrategy\ImmutableResizeStrategyFactory;
 use App\Core\ResizeStrategy\Exception\ResizeStrategyException;
 use App\Core\ResizeStrategy\ResizeStrategyFixed;
 use PHPUnit\Framework\TestCase;
+use Test\App\Core\ContextMock;
 
 final class DefaultResizeStrategyFactoryTest extends TestCase
 {
@@ -22,7 +23,7 @@ final class DefaultResizeStrategyFactoryTest extends TestCase
 
     public function testReturnsResizeStrategy(): void
     {
-        $strategy = ($this->factory)('fixed');
+        $strategy = ($this->factory)(new ContextMock(strategyName: 'fixed'));
 
         self::assertInstanceOf(ResizeStrategyFixed::class, $strategy);
     }
@@ -31,6 +32,6 @@ final class DefaultResizeStrategyFactoryTest extends TestCase
     {
         $this->expectException(ResizeStrategyException::class);
 
-        ($this->factory)('invalid');
+        ($this->factory)(new ContextMock(strategyName: 'invalid'));
     }
 }

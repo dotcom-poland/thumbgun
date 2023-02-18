@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCase\ServeResized;
 
+use App\Core\Context\RequestContextFactoryInterface;
 use App\Core\Image\Exception\ImageException;
 use App\Core\Image\SupportedImagesInterface;
 use App\Core\Processor\ThumbnailProcessorInterface;
@@ -24,46 +25,35 @@ final class IndexAction
     private const YEAR = 31536000;
 
     public function __construct(
-        private readonly ChecksumValidatorInterface     $checksumValidator,
-        private readonly SupportedImagesInterface       $supportedFormats,
-        private readonly SizeFactoryInterface           $sizeFactory,
+        private readonly RequestContextFactoryInterface $requestContextFactory,
+        private readonly ChecksumValidatorInterface $checksumValidator,
+        private readonly SupportedImagesInterface $supportedFormats,
+        private readonly SizeFactoryInterface $sizeFactory,
         private readonly ResizeStrategyFactoryInterface $resizeStrategyFactory,
-        private readonly ImageSourceFactoryInterface    $sourceFactory,
-        private readonly ThumbnailProcessorInterface    $thumbnailProcessor,
-        private readonly LoggerInterface                $logger,
-    ) {}
+        private readonly ImageSourceFactoryInterface $sourceFactory,
+        private readonly ThumbnailProcessorInterface $thumbnailProcessor,
+        private readonly LoggerInterface $logger,
+    ) {
+    }
 
     /**
      * @throws Exception
      */
     public function __invoke(Request $request): Response
     {
-        /** @var non-empty-string $checksum */
-        $checksum = $request->attributes->get('checksum');
+        $context = ($this->requestContextFactory)();
 
-        /** @var non-empty-string $strategyName */
-        $strategyName = $request->attributes->get('strategy');
-
-        /** @var non-empty-string $sizeFormat */
-        $sizeFormat = $request->attributes->get('size');
-
-        /** @var non-empty-string $imageFormat */
-        $imageFormat = $request->attributes->get('format');
-
-        /** @var non-empty-string $imageId */
-        $imageId = $request->attributes->get('id');
-
-        if (false === ($this->checksumValidator)($strategyName, $sizeFormat, $imageId, $imageFormat, $checksum)) {
+        if (false === ($this->checksumValidator)($context)) {
             return new Response('Invalid checksum', Response::HTTP_FORBIDDEN);
         }
 
-        if (false === $this->supportedFormats->isSupported($imageFormat)) {
+        if (false === $this->supportedFormats->isSupported($context)) {
             return new Response('Unsupported format', Response::HTTP_BAD_REQUEST);
         }
 
         try {
-            $strategy = ($this->resizeStrategyFactory)($strategyName);
-            $size = ($this->sizeFactory)($sizeFormat);
+            $strategy = ($this->resizeStrategyFactory)($context);
+            $size = ($this->sizeFactory)($context);
         } catch (ResizeStrategyException|SizeException) {
             return new Response('Unsupported size format', Response::HTTP_BAD_REQUEST);
         }
@@ -71,7 +61,7 @@ final class IndexAction
         $source = ($this->sourceFactory)();
 
         try {
-            $image = ($source)($imageId, $imageFormat);
+            $image = ($source)($context);
         } catch (ImageNotFoundException) {
             return new Response('No such image', Response::HTTP_NOT_FOUND);
         } catch (ImageException) {

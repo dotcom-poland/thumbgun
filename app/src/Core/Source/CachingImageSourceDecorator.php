@@ -6,18 +6,23 @@ namespace App\Core\Source;
 
 use App\Core\Image\ImageInterface;
 use App\Core\Image\ImmutableImage;
+use App\Core\RequestContextInterface;
 
 final class CachingImageSourceDecorator implements ImageSourceInterface
 {
     public function __construct(
         private readonly ImageSourceInterface $source,
         private readonly string $storage,
-    ) {}
+    ) {
+    }
 
     /** {@inheritDoc} */
-    public function __invoke(string $imageId, string $imageFormat): ImageInterface
+    public function __invoke(RequestContextInterface $context): ImageInterface
     {
-        return new ImmutableImage($imageId, $imageFormat, function () use ($imageId, $imageFormat): string {
+        $imageId = $context->getImageId();
+        $imageFormat = $context->getImageFormat();
+
+        return new ImmutableImage($imageId, $imageFormat, function () use ($imageId, $context): string {
             $imagePath = \sprintf('%s/%s', $this->storage, $imageId);
 
             if (\file_exists($imagePath)) {
@@ -28,7 +33,7 @@ final class CachingImageSourceDecorator implements ImageSourceInterface
                 \mkdir(\dirname($imagePath), 0777, true);
             }
 
-            $remoteImage = ($this->source)($imageId, $imageFormat);
+            $remoteImage = ($this->source)($context);
 
             \file_put_contents($imagePath, $remoteImage->getSource()());
 

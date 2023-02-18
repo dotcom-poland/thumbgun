@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DevTools;
 
+use App\Core\Context\ImmutableRequestContext;
 use App\Core\Security\ChecksumBuilderInterface;
 use App\Core\Security\ImmutableKey;
 use App\Core\Security\KeyInterface;
@@ -18,7 +19,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 final class UrlGenerateCommand extends Command
 {
-    public function __construct (
+    public function __construct(
         private readonly RouterInterface $router,
         private readonly ChecksumBuilderInterface $checksumBuilder,
         private readonly KeyVaultInterface $vault,
@@ -61,10 +62,7 @@ final class UrlGenerateCommand extends Command
 
         $checksum = ($this->checksumBuilder)(
             $key,
-            $strategy,
-            $size,
-            $imageId,
-            $format,
+            new ImmutableRequestContext('dummy', $strategy, $size, $imageId, $format),
         );
 
         $url = $this->router->generate('thumbnail_serve', [
